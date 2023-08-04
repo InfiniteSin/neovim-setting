@@ -1,9 +1,0 @@
--- Plugin Configs Settings
-return {
-	-- Show Key Map and Keybinding Manage
-	{ "plugins.whichkey" },
-
-	-- Fuzzy Finder
-	{ "plugins.telescope" },
-}
-
