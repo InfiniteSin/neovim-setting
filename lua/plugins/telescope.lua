@@ -7,7 +7,4 @@ return {
 		},
 		opts = {},
 	},
-	{
-		"nvim-lua/plenary.nvim",
-	},
 }

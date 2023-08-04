@@ -3,9 +3,20 @@ local wk = require("which-key")
 
 -- Basic Key Maps
 wk.register({
-	["<leader>"] = {
-		r = {
-			w = { vim.cmd.Ex, "Return Netrw" },
-		},
+	r = {
+		name = "Netrw",
+		w = { vim.cmd.Ex, "Return Netrw" },
 	},
+	{ prefix = "<leader>" },
+})
+
+-- Telescope Key Maps
+local builtin = require("telescope.builtin")
+wk.register({
+	f = {
+		name = "Fuzzy Find",
+		f = { builtin.find_files, "Find File" },
+		b = { builtin.find_buffers, "Find Buffers" },
+	},
+	{ prefix = "<leader>" },
 })
