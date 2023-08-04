@@ -26,7 +26,7 @@ return {
 			lsp.ensure_installed({
 				"bashls",
 				"eslint",
-				"lua-language-server",
+				"lua_ls",
 				"marksman",
 				-- "pyright",
 				-- "pylsp",
