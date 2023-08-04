@@ -26,12 +26,12 @@ return {
 			lsp.ensure_installed({
 				"bashls",
 				"eslint",
+				"lua-language-server",
 				"marksman",
 				-- "pyright",
-				"pylsp",
+				-- "pylsp",
 				"ruff_lsp",
 				"rust_analyzer",
-				"sumneko_lua",
 				"tsserver",
 			})
 
