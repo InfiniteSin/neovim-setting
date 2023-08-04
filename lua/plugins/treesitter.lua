@@ -4,6 +4,10 @@ return {
 		build = ":TSUpdate",
 		event = { "BufReadPost", "BufNewFile" },
 		cmd = { "TSUpdateSync" },
+		dependencies = {
+			"nvim-treesitter/nvim-tree-docs",
+			"nvim-treesitter/playground",
+		},
 		keys = {
 			{ "<c-space>", desc = "Increment selection" },
 			{ "<bs>", desc = "Decrement selection", mode = "x" },
@@ -39,6 +43,17 @@ return {
 					node_incremental = "<C-space>",
 					scope_incremental = false,
 					node_decremental = "<bs>",
+				},
+			},
+			tree_docs = { enable = true },
+			playground = { 
+				enable = true,
+				updatetime = 25,
+				persist_queries = false,
+				keybindings = {
+					update = "R",
+					goto_node = "<cr>",
+					show_help = "?",
 				},
 			},
 		},
