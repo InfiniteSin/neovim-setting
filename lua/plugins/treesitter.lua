@@ -21,6 +21,7 @@ return {
 			ensure_installed = {
 				"bash",
 				"c",
+				"cpp",
 				"lua",
 				"luadoc",
 				"luap",
@@ -28,14 +29,20 @@ return {
 				"markdown_inline",
 				"python",
 				"query",
+				"r",
 				"regex",
 				"sql",
 				"vim",
 				"vimdoc",
 				"yaml"
 			},
-			sync_install = true,
-			auto_install = false,
+<<<<<<< HEAD
+			sync_install = false,
+			auto_install = true,
+=======
+			sync_install = false,
+			auto_install = true,
+>>>>>>> f73ebb83ed0e7f2d3e0b4c9b73529b16bc85610e
 			incremental_selection = {
 				enable = true,
 				keymaps = {
