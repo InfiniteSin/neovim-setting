@@ -34,7 +34,7 @@ return {
 				"vimdoc",
 				"yaml"
 			},
-			sync_install = false,
+			sync_install = true,
 			auto_install = false,
 			incremental_selection = {
 				enable = true,
