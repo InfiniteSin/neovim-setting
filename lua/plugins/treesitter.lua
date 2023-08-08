@@ -22,9 +22,8 @@ return {
 				"bash",
 				"c",
 				"cpp",
+				"llvm",
 				"lua",
-				"luadoc",
-				"luap",
 				"markdown",
 				"markdown_inline",
 				"python",
@@ -32,17 +31,13 @@ return {
 				"r",
 				"regex",
 				"sql",
+				"toml",
 				"vim",
 				"vimdoc",
 				"yaml"
 			},
-<<<<<<< HEAD
 			sync_install = false,
 			auto_install = true,
-=======
-			sync_install = false,
-			auto_install = true,
->>>>>>> f73ebb83ed0e7f2d3e0b4c9b73529b16bc85610e
 			incremental_selection = {
 				enable = true,
 				keymaps = {
