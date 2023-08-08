@@ -9,7 +9,7 @@ return {
 			"nvim-treesitter/playground",
 		},
 		keys = {
-			{ "<c-space>", desc = "Increment selection" },
+			{ "<C-Space>", desc = "Increment selection" },
 			{ "<bs>", desc = "Decrement selection", mode = "x" },
 		},
 		opts = {
