@@ -22,9 +22,3 @@ wk.register({
 })
 
 -- Treesitter Key Maps
-wk.register({
-	p = {
-		g = { "<cmd>:TSPlaygroundToggle<cr>", "Toggle Playground" }
-	},
-	{ prefix = "<leader>" },
-})
