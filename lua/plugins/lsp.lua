@@ -28,6 +28,16 @@ return {
 				lsp.default_keymaps({buffer = bufnr})
 			end)
 
+			lsp.ensure_installed({
+				"bashls",
+				"clangd",
+				"lua_ls",
+				"ruff_lsp",
+				"r_language_server",
+				"rust_analyzer",
+				"sqlls",
+			})
+
 			-- Configure lua language server for neovim
 			require("lspconfig").lua_ls.setup(lsp.nvim_lua_ls())
 
