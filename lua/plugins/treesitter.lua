@@ -13,7 +13,7 @@ return {
 			{ "<bs>", desc = "Decrement selection", mode = "x" },
 		},
 		opts = {
-			highlight = { 
+			highlight = {
 				enable = true,
 				additional_vim_regex_highlighting = false,
 			},
@@ -49,7 +49,7 @@ return {
 				},
 			},
 			tree_docs = { enable = true },
-			playground = { 
+			playground = {
 				enable = true,
 				updatetime = 25,
 				persist_queries = false,
