@@ -32,10 +32,10 @@ return {
 				"bashls",
 				"clangd",
 				"lua_ls",
-				"ruff_lsp",
-				"r_language_server",
+				-- "ruff_lsp",
+				-- "r_language_server",
 				"rust_analyzer",
-				"sqlls",
+				-- "sqlls",
 			})
 
 			-- Configure lua language server for neovim
