@@ -2,10 +2,10 @@
 require("basic")
 
 -- Plugin Settings
-require("plugin")
+-- require("plugin")
 
 -- Keymap Settings
-require("keybindings")
+-- require("keybindings")
 
 -- Auto Commands Settings
-require("autocmds")
+-- require("autocmds")
