@@ -1,2 +1,2 @@
 -- Basic Configs
--- require("basic")
+require("basic")
