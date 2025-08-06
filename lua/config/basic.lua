@@ -15,6 +15,11 @@ local options_opt = {
     sidescrolloff = 8,
     showtabline = 2, -- always show tabline
     showmode = true, -- always show current vim mode
+    number = ture, -- use line number
+    relativenumber = true, -- use relative line number
+    cursorline = true, -- highlight current line
+    -- signcolumn = "yes", -- left 1 column to show any sign
+    colorcolumn = "80", -- column length reference
     -- cmdheight = 2, -- higher command area
     wrap = false, -- disable auto line wrap
     linebreak = true, -- wrap line in convenient points only in display
@@ -100,12 +105,6 @@ end
 -- Window Scope Options
 local wo = vim.wo
 local options_wo = {
-    -- Editor
-    number = ture, -- use line number
-    relativenumber = true, -- use relative line number
-    cursorline = true, -- highlight current line
-    -- signcolumn = "yes", -- left 1 column to show any sign
-    colorcolumn = "80", -- column length reference
 }
 for key, value in pairs(options_wo) do
     wo[key] = value
