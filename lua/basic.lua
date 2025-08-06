@@ -2,6 +2,8 @@
 local g = vim.g
 local options_g = {
     encoding = "UTF-8", -- use utf-8 file encode
+    mapleader = " ",
+    maplocalleader = "\\",
 }
 for key, value in pairs(options_g) do
     g[key] = value
