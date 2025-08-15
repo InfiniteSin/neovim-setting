@@ -113,6 +113,7 @@ vim.pack.add({
     { src = "https://github.com/vague2k/vague.nvim" },
     { src = "https://github.com/stevearc/oil.nvim" },
     { src = "https://github.com/echasnovski/mini.pick" },
+    { src = "https://github.com/neovim/nvim-lspconfig" },
     {
         src = "https://github.com/nvim-treesitter/nvim-treesitter",
         version = "main",
@@ -132,10 +133,10 @@ map({ 'n', 'v' }, '<leader>y', '"+y')
 map({ 'n', 'v' }, '<leader>d', '"+d')
 -- open terminal in split window below
 map("n", "<space>to", function()
-  vim.cmd.vnew()
-  vim.cmd.term()
-  vim.cmd.wincmd("J")
-  vim.api.nvim_win_set_height(0, 5)
+    vim.cmd.vnew()
+    vim.cmd.term()
+    vim.cmd.wincmd("J")
+    vim.api.nvim_win_set_height(0, 5)
 end)
 -- cancel highlight after search
 map("n", "<Esc><Esc>", function()
@@ -145,6 +146,11 @@ end)
 map("n", "<leader>er", ':e G:/Code<CR>')
 -- Edit config directory
 map("n", "<leader>ec", ':e D:/configs/configs<CR>')
+
+-- User Command
+vim.api.nvim_create_user_command("PackUpdate", function()
+    vim.pack.update()
+end, {})
 
 -- Colorscheme
 require("vague").setup({ transparent = true })
@@ -162,7 +168,7 @@ map('n', '<leader>lf', vim.lsp.buf.format)
 -- LSP Config
 vim.lsp.enable({
     "lua_ls",
-    "python-lsp-server",
+    "pylsp",
 })
 
 -- Plugin Init
@@ -175,6 +181,7 @@ require("nvim-treesitter").setup({
         "lua",
         "vim",
         "vimdoc",
+        "python",
         "query",
         "markdown",
         "markdown_inline",
@@ -208,17 +215,41 @@ map({ "i", "s" }, "<C-K>",
 --  Try it with `yap` in normal mode
 --  See `:help vim.highlight.on_yank()`
 vim.api.nvim_create_autocmd("TextYankPost", {
-  desc = "Highlight when yanking (copying) text",
-  group = vim.api.nvim_create_augroup("kickstart-highlight-yank", { clear = true }),
-  callback = function()
-    vim.highlight.on_yank()
-  end,
+    desc = "Highlight when yanking (copying) text",
+    group = vim.api.nvim_create_augroup("kickstart-highlight-yank", { clear = true }),
+    callback = function()
+        vim.highlight.on_yank()
+    end,
 })
 
 vim.api.nvim_create_autocmd("TermOpen", {
-  group = vim.api.nvim_create_augroup("custom-term-open", { clear = true }),
-  callback = function()
-    vim.opt.number = false
-    vim.opt.relativenumber = false
-  end,
+    group = vim.api.nvim_create_augroup("custom-term-open", { clear = true }),
+    callback = function()
+        vim.opt.number = false
+        vim.opt.relativenumber = false
+    end,
 })
+
+vim.diagnostic.config({
+    virtual_text = true,
+    underline = true,
+    update_in_insert = false,
+    severity_sort = true,
+    float = {
+        border = "rounded",
+        source = true,
+    },
+    signs = {
+        text = {
+            [vim.diagnostic.severity.ERROR] = "󰅚 ",
+            [vim.diagnostic.severity.WARN] = "󰀪 ",
+            [vim.diagnostic.severity.INFO] = "󰋽 ",
+            [vim.diagnostic.severity.HINT] = "󰌶 ",
+        },
+        numhl = {
+            [vim.diagnostic.severity.ERROR] = "ErrorMsg",
+            [vim.diagnostic.severity.WARN] = "WarningMsg",
+        },
+    },
+})
+
