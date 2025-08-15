@@ -170,6 +170,63 @@ vim.lsp.enable({
     "lua_ls",
     "pylsp",
 })
+vim.lsp.config('*', {
+    capabilities = {
+        textDocument = {
+            semanticTokens = {
+                multilineTokenSupport = true,
+            },
+            completion = {
+                completionItem = {
+                    snippetSupport = true,
+                },
+            },
+        },
+    },
+    root_markers = { '.git' },
+})
+vim.api.nvim_create_autocmd('LspAttach', {
+    group = vim.api.nvim_create_augroup('lsp-attach', {}),
+    callback = function(args)
+        local client = assert(vim.lsp.get_client_by_id(args.data.client_id))
+        if client:supports_method('textDocument/implementation') then
+            -- keymap for vim.lsp.buf.implementation
+            map('n', 'gri', vim.lsp.buf.implementation)
+        end
+        -- enable auto-completion.
+        -- Note: Use <C-y> to select an item
+        if client:supports_method('textDocument/completion') then
+            -- Optional: trigger autocomplet on EVERY key press. Maybe slow!
+            -- local chars = {}; for i = 32, 126 do table.insert(chars, string.char(i))
+            -- client.server_capabilities.completionProvider.triggerCharacters = chars
+            vim.lsp.completion.enable(true, client.id, args.buf, { autotrigger = false })
+        end
+        -- Auto-format('lint') on save
+        -- Usually not need if server supports 'textDocument/willSaveWaitUntil'
+        if not client:supports_method('textDocument/willSaveWaitUntil')
+            and client:supports_method('textDocument/formatting') then
+            vim.api.nvim_create_autocmd('BufWritePre', {
+                group = vim.api.nvim_create_augroup('lsp-attach', { clear = true }),
+                buffer = args.buf,
+                callback = function()
+                    vim.lsp.buf.format({
+                        bufnr = args.buf,
+                        id = client.id,
+                        timeout_ms = 1000
+                })
+                end,
+            })
+        end
+    end,
+})
+map('n', 'gdc', vim.lsp.buf.declaration)
+map('n', 'gdf', vim.lsp.buf.definition)
+-- default keymap from neovim Ver 11
+-- map('n', 'grr', vim.lsp.buf.references)
+-- map('n', 'grt', vim.lsp.buf.type_definition)
+-- map('n', 'grn', vim.lsp.buf.rename)
+-- map('n', 'gO', vim.lsp.buf.document_symbol)
+-- map('n', 'gra', vim.lsp.buf.code_action)
 
 -- Plugin Init
 require("mason").setup()
