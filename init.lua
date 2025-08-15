@@ -154,6 +154,7 @@ vim.lsp.enable({
 require("mason").setup()
 require("mini.pick").setup()
 require("oil").setup()
+require("nvim-lspconfig")
 require("nvim-treesitter").setup({
     ensure_installed = {
         "c",
