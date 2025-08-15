@@ -64,6 +64,7 @@ local options_opt = {
         "menuone",
         "noselect", -- donot auto select complete option
         "noinsert", -- do not auto insert complete option
+        "popup",
     },
     -- wildmenu = true,
     pumheight = 10, -- show at most 10 options
@@ -213,7 +214,7 @@ vim.api.nvim_create_autocmd('LspAttach', {
                         bufnr = args.buf,
                         id = client.id,
                         timeout_ms = 1000
-                })
+                    })
                 end,
             })
         end
@@ -309,4 +310,3 @@ vim.diagnostic.config({
         },
     },
 })
-
