@@ -161,6 +161,8 @@ vim.cmd(":hi statusline guibg=NONE")
 -- Plugin Key Mapping
 map('n', '<leader>ff', ":Pick files<CR>")
 map('n', '<leader>fh', ":Pick help<CR>")
+map('n', '<leader>fb', ":Pick buffers<CR>")
+map('n', '<leader>fg', ":Pick grep<CR>")
 map('n', '-', ":Oil<CR>")
 map('t', '', "")
 map('t', '', "")
