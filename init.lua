@@ -2,8 +2,9 @@
 local g = vim.g
 local options_g = {
     encoding = "UTF-8", -- use utf-8 file encode
-    mapleaderkey = " ",
-    maplocalleaderkey = "\\",
+    mapleader = " ",
+    -- maplocalleaderkey = "\\",
+    maplocalleader = " ",
     python3_host_prog = "G:/Code/pyneovim/.venv/Scripts/python",
 }
 for key, value in pairs(options_g) do
