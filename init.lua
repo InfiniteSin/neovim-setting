@@ -130,15 +130,21 @@ map('n', '<leader>s', ':e .<CR>')  -- edit current directory
 map('n', '<leader>S', ':sf .<CR>') -- edit current directory with split window
 map({ 'n', 'v' }, '<leader>y', '"+y')
 map({ 'n', 'v' }, '<leader>d', '"+d')
+-- open terminal in split window below
 map("n", "<space>to", function()
   vim.cmd.vnew()
   vim.cmd.term()
   vim.cmd.wincmd("J")
   vim.api.nvim_win_set_height(0, 5)
 end)
+-- cancel highlight after search
 map("n", "<Esc><Esc>", function()
     vim.cmd(":nohlsearch")
 end)
+-- Edit code parent directory
+map("n", "<leader>er", ':e G:/Code<CR>')
+-- Edit config directory
+map("n", "<leader>ec", ':e D:/configs/configs<CR>')
 
 -- Colorscheme
 require("vague").setup({ transparent = true })
