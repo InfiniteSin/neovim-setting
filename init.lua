@@ -129,6 +129,14 @@ map('n', '<leader>s', ':e .<CR>')  -- edit current directory
 map('n', '<leader>S', ':sf .<CR>') -- edit current directory with split window
 map({ 'n', 'v' }, '<leader>y', '"+y')
 map({ 'n', 'v' }, '<leader>d', '"+d')
+map("n", "<space>to", function()
+  vim.cmd.vnew()
+  vim.cmd.term()
+  vim.cmd.wincmd("J")
+  vim.api.nvim_win_set_height(0, 5)
+
+  job_id = vim.bo.channel
+end)
 
 -- Colorscheme
 require("vague").setup({ transparent = true })
@@ -138,7 +146,7 @@ vim.cmd(":hi statusline guibg=NONE")
 -- Plugin Key Mapping
 map('n', '<leader>ff', ":Pick files<CR>")
 map('n', '<leader>fh', ":Pick help<CR>")
-map('n', '<leader>e', ":Oil<CR>")
+map('n', '-', ":Oil<CR>")
 map('t', '', "")
 map('t', '', "")
 map('n', '<leader>lf', vim.lsp.buf.format)
@@ -146,6 +154,7 @@ map('n', '<leader>lf', vim.lsp.buf.format)
 -- LSP Config
 vim.lsp.enable({
     "lua_ls",
+    "python-lsp-server",
 })
 
 -- Plugin Init
@@ -186,3 +195,22 @@ map({ "i", "s" }, "<C-K>",
         ls.jump(-1)
     end,
     { silent = true })
+
+-- Highlight when yanking (copying) text
+--  Try it with `yap` in normal mode
+--  See `:help vim.highlight.on_yank()`
+vim.api.nvim_create_autocmd("TextYankPost", {
+  desc = "Highlight when yanking (copying) text",
+  group = vim.api.nvim_create_augroup("kickstart-highlight-yank", { clear = true }),
+  callback = function()
+    vim.highlight.on_yank()
+  end,
+})
+
+vim.api.nvim_create_autocmd("TermOpen", {
+  group = vim.api.nvim_create_augroup("custom-term-open", { clear = true }),
+  callback = function()
+    vim.opt.number = false
+    vim.opt.relativenumber = false
+  end,
+})
