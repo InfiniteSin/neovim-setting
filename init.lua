@@ -147,6 +147,12 @@ end)
 map("n", "<leader>er", ':e G:/Code<CR>')
 -- Edit config directory
 map("n", "<leader>ec", ':e D:/configs/configs<CR>')
+-- Quickfix
+map("n", "<M-j>", "<cmd>cnext<CR>")
+map("n", "<M-k>", "<cmd>cprev<CR>")
+map("n", "<M-o>", "<cmd>copen<CR>")
+map("n", "<M-c>", "<cmd>cclose<CR>")
+
 
 -- User Command
 vim.api.nvim_create_user_command("PackUpdate", function()
