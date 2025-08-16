@@ -77,10 +77,57 @@ for key, value in pairs(options_opt) do
     opt[key] = value
 end
 
+_G.get_mode = function()
+    local map = {
+        ['n']     = 'NORMAL',
+        ['no']    = 'O-PENDING',
+        ['nov']   = 'O-PENDING',
+        ['noV']   = 'O-PENDING',
+        ['no\22'] = 'O-PENDING',
+        ['niI']   = 'NORMAL',
+        ['niR']   = 'NORMAL',
+        ['niV']   = 'NORMAL',
+        ['nt']    = 'NORMAL',
+        ['ntT']   = 'NORMAL',
+        ['v']     = 'VISUAL',
+        ['vs']    = 'VISUAL',
+        ['V']     = 'V-LINE',
+        ['Vs']    = 'V-LINE',
+        ['\22']   = 'V-BLOCK',
+        ['\22s']  = 'V-BLOCK',
+        ['s']     = 'SELECT',
+        ['S']     = 'S-LINE',
+        ['\19']   = 'S-BLOCK',
+        ['i']     = 'INSERT',
+        ['ic']    = 'INSERT',
+        ['ix']    = 'INSERT',
+        ['R']     = 'REPLACE',
+        ['Rc']    = 'REPLACE',
+        ['Rx']    = 'REPLACE',
+        ['Rv']    = 'V-REPLACE',
+        ['Rvc']   = 'V-REPLACE',
+        ['Rvx']   = 'V-REPLACE',
+        ['c']     = 'COMMAND',
+        ['cv']    = 'EX',
+        ['ce']    = 'EX',
+        ['r']     = 'REPLACE',
+        ['rm']    = 'MORE',
+        ['r?']    = 'CONFIRM',
+        ['!']     = 'SHELL',
+        ['t']     = 'TERMINAL',
+    }
+    local mode_code = vim.api.nvim_get_mode().mode
+    if map[mode_code] == nil then
+        return mode_code
+    end
+    return map[mode_code]
+end
 local o = vim.o
 local options_o = {
     whichwrap = "<,>,[,]", -- when cursor in front/end of line,use <Left>/<Right> jump to next line
     listchars = "space:.", -- display . instead of spaces
+    tabline = "%t",        -- tabline
+    statusline = "[%{v:lua.get_mode()}] %f%m  %(%r%h%w%q%) %= [Buffer %n] %y Line:%l Col:%c %p%% ",
 }
 for key, value in pairs(options_o) do
     o[key] = value
@@ -112,6 +159,7 @@ end
 -- Plugin manage with native vim.pack
 vim.pack.add({
     { src = "https://github.com/vague2k/vague.nvim" },
+    { src = "https://github.com/echasnovski/mini.icons" },
     { src = "https://github.com/stevearc/oil.nvim" },
     { src = "https://github.com/echasnovski/mini.pick" },
     { src = "https://github.com/neovim/nvim-lspconfig" },
@@ -126,21 +174,36 @@ vim.pack.add({
 -- Key Mapping
 local map = vim.keymap.set
 map('n', '<leader>o', ':update<CR> :source<CR>')
+map('n', '<leader><leader>x', '<cmd>source %<CR>')
+map('n', '<leader>x', ':.lua<CR>')
+map('v', '<leader>x', ':lua<CR>')
 map('n', '<leader>w', ':write<CR>')
-map('n', '<leader>q', ':quit<CR>')
+map('n', '<leader>qq', ':quit<CR>')
 map('n', '<leader>s', ':e .<CR>')  -- edit current directory
 map('n', '<leader>S', ':sf .<CR>') -- edit current directory with split window
 map({ 'n', 'v' }, '<leader>y', '"+y')
 map({ 'n', 'v' }, '<leader>d', '"+d')
 -- open terminal in split window below
-map("n", "<space>to", function()
+local job_id = 0
+map("n", "<leader>st", function()
     vim.cmd.vnew()
     vim.cmd.term()
     vim.cmd.wincmd("J")
     vim.api.nvim_win_set_height(0, 5)
+    vim.cmd("startinsert")
+
+    job_id = vim.bo.channel
 end)
+
+map("n", "<space>run", function()
+    vim.fn.chansend(job_id, {
+        "python -v\r\n",
+    })
+end)
+
+map("t", "<esc><esc>", '<C-\\><C-N>')
 -- cancel highlight after search
-map("n", "<Esc><Esc>", function()
+map("n", "<esc><esc>", function()
     vim.cmd(":nohlsearch")
 end)
 -- Edit code parent directory
@@ -152,6 +215,8 @@ map("n", "<M-j>", "<cmd>cnext<CR>")
 map("n", "<M-k>", "<cmd>cprev<CR>")
 map("n", "<M-o>", "<cmd>copen<CR>")
 map("n", "<M-c>", "<cmd>cclose<CR>")
+-- Buffer
+-- map("n", "<leader>q", ":bd!<CR>", { silent = true })
 
 
 -- User Command
@@ -162,7 +227,7 @@ end, {})
 -- Colorscheme
 require("vague").setup({ transparent = true })
 vim.cmd("colorscheme vague")
-vim.cmd(":hi statusline guibg=NONE")
+-- vim.cmd(":hi statusline guibg=NONE")
 
 -- Plugin Key Mapping
 map('n', '<leader>ff', ":Pick files<CR>")
@@ -239,6 +304,7 @@ map('n', 'gdf', vim.lsp.buf.definition)
 
 -- Plugin Init
 require("mason").setup()
+require("mini.icons").setup()
 require("mini.pick").setup()
 require("oil").setup()
 require("nvim-treesitter").setup({
@@ -318,3 +384,85 @@ vim.diagnostic.config({
         },
     },
 })
+
+-- Float Window and Float Terminal
+local f_state = {
+    floating = {
+        buf = -1,
+        win = -1,
+    },
+}
+local create_float_window = function(opts)
+    opts = opts or {}
+    local width = opts.width or math.floor(vim.o.columns * 0.8)
+    local height = opts.width or math.floor(vim.o.lines * 0.8)
+
+    -- Calculate the position to center the window
+    local col = math.floor((vim.o.columns - width) / 2)
+    local row = math.floor((vim.o.lines - width) / 2)
+
+    -- Create a buffer
+    local buf = nil
+    if vim.api.nvim_buf_is_valid(opts.buf) then
+        buf = opts.buf
+    else
+        buf = vim.api.nvim_create_buf(false, true) -- No file, scratch buffer
+    end
+
+    -- Define window configuration
+    local win_config = {
+        relative = "editor",
+        width = width,
+        height = height,
+        col = col,
+        row = row,
+        style = "minimal", -- No borders or extra UI elements
+        border = "rounded",
+    }
+
+    local win = vim.api.nvim_open_win(buf, true, win_config)
+
+    return { buf = buf, win = win }
+end
+
+local toggle_float_terminal = function()
+    if not vim.api.nvim_win_is_valid(f_state.floating.win) then
+        f_state.floating = create_float_window { buf = f_state.floating.buf }
+        if vim.bo[f_state.floating.buf].buftype ~= "terminal" then
+            vim.cmd.terminal()
+            vim.cmd("startinsert")
+        end
+        map("n", "q", function()
+            vim.api.nvim_win_close(f_state.floating.win, true)
+            vim.api.nvim_buf_delete(f_state.floating.buf, { force = true })
+        end, { buffer = f_state.floating.buf })
+    else
+        vim.api.nvim_win_hide(f_state.floating.win)
+    end
+    -- Ensure buffer was delete when close window
+    -- vim.api.nvim_create_autocmd("BufLeave", {
+    --     buffer = f_state.floating.buf,
+    --     callback = function()
+    --         vim.api.nvim_buf_delete(f_state.floating.buf, { force = true })
+    --     end,
+    -- })
+end
+
+-- User Command for float window
+vim.api.nvim_create_user_command("FloatWin", function()
+    f_state.floating = create_float_window()
+end, {})
+-- User Command for float terminal
+vim.api.nvim_create_user_command("FloatTerm", toggle_float_terminal, {})
+map({ "n", "t" }, "<leader>tt", toggle_float_terminal)
+
+-- User Command for clean unlist buffer
+local clean_unlist_buf = function()
+    for _, buf in ipairs(vim.api.nvim_list_bufs()) do
+        if not vim.api.nvim_buf_is_loaded(buf) then
+            vim.cmd("bdelete " .. buf)
+        end
+    end
+end
+vim.api.nvim_create_user_command("ClearUnlistBuf", clean_unlist_buf, {})
+map("n", "<leader>qb", clean_unlist_buf)
