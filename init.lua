@@ -243,6 +243,7 @@ map('n', '<leader>lf', vim.lsp.buf.format)
 vim.lsp.enable({
     "lua_ls",
     "pylsp",
+    "ruff",
 })
 vim.lsp.config('*', {
     capabilities = {
@@ -301,6 +302,65 @@ map('n', 'gdf', vim.lsp.buf.definition)
 -- map('n', 'grn', vim.lsp.buf.rename)
 -- map('n', 'gO', vim.lsp.buf.document_symbol)
 -- map('n', 'gra', vim.lsp.buf.code_action)
+
+-- Ruff
+vim.lsp.config("ruff", {
+    init_options = {
+        settings = {
+            -- ruff settings
+            lint = {
+                extendSelect = { "All" },
+                ignore = {
+                    "ERA001",
+                    "T201",
+                    "N802",
+                    "N806",
+                    "PLR2004",
+                    "RET505",
+                    "S101",
+                },
+            },
+        },
+    },
+})
+require("lspconfig").ruff.setup({
+    init_options = {
+        settings = {
+            logLevel = "debug",
+        },
+    },
+})
+-- If install pyright
+-- vim.api.nvim_create_autocmd("LspAttach", {
+--     group = vim.api.nvim_create_augroup("lsp_attach_disable_ruff_hover",
+--     {clear = true}),
+--     callback = function(args)
+--         local client = vim.lsp.get_client_by_id(args.data.client_id)
+--         if client == nil then
+--             return
+--         end
+--         if client.name == "ruff" then
+--             -- Disable hover in faver of Pyright
+--             client.server_capabilities.hoverProvider = false
+--         end
+--     end,
+--     desc = "LSP: Disable hover capability from Ruff"
+-- })
+-- require("lspconfig").pyright.setup({
+--     settings = {
+--         pyright = {
+--             -- Using Ruff's import organizer
+--             disableOrganizeImports = true,
+--         },
+--         python = {
+--             analysis = {
+--                 -- Ignore all files for analysis to exclusively use Ruff for linting
+--                 ignore = { "*" },
+--             },
+--         },
+--     },
+-- })
+
 
 -- Plugin Init
 require("mason").setup()
