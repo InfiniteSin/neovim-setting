@@ -127,7 +127,19 @@ local options_o = {
     whichwrap = "<,>,[,]", -- when cursor in front/end of line,use <Left>/<Right> jump to next line
     listchars = "space:.", -- display . instead of spaces
     tabline = "%t",        -- tabline
-    statusline = "[--%{v:lua.get_mode()}--] %F%m %t%(%r%h%w%q%) %= [Buffer %n] %y [Line:%l|%L] [Col:%v|%c] %4p%%  ",
+    -- Statusline
+    statusline = table.concat({
+        "[--%{v:lua.get_mode()}--]",
+        "%F%m",
+        "%t%(%r%h%w%q%)",
+        "%=",
+        "[Buffer %n]",
+        "%y",
+        "[Line:%l|%L]",
+        "[Col:%v|%c]",
+        "%4p%%",
+        "    "
+    }, " ")
 }
 for key, value in pairs(options_o) do
     o[key] = value
