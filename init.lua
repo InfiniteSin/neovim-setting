@@ -195,6 +195,15 @@ map('n', '<leader>s', ':e .<CR>')  -- edit current directory
 map('n', '<leader>S', ':sf .<CR>') -- edit current directory with split window
 map({ 'n', 'v' }, '<leader>y', '"+y')
 map({ 'n', 'v' }, '<leader>d', '"+d')
+-- keep visual select area when indent
+map('v', '<', '<gv', { noremap = true, silent = true })
+map('v', '>', '>gv', { noremap = true, silent = true })
+-- move line up/down in visual mode
+map('v', '<M-j>', ":m '>+1<CR>gv=gv", { noremap = true, silent = true })
+map('v', '<M-k>', ":m '<-2<CR>gv=gv", { noremap = true, silent = true })
+
+
+
 -- open terminal in split window below
 local job_id = 0
 map("n", "<leader>st", function()
