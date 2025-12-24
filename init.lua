@@ -66,6 +66,7 @@ local options_opt = {
         "noinsert", -- do not auto insert complete option
         "popup",
     },
+    completefunc = 'v:lua.vim.lsp.omnifunc',
     -- wildmenu = true,
     pumheight = 10, -- show at most 10 options
     -- UI
@@ -76,6 +77,7 @@ local options_opt = {
 for key, value in pairs(options_opt) do
     opt[key] = value
 end
+vim.opt.path:append('**')
 
 _G.get_mode = function()
     local map = {
@@ -125,7 +127,7 @@ end
 local o = vim.o
 local options_o = {
     whichwrap = "<,>,[,]", -- when cursor in front/end of line,use <Left>/<Right> jump to next line
-    listchars = "space:.", -- display . instead of spaces
+    -- listchars = "space:.", -- display . instead of spaces
     tabline = "%t",        -- tabline
     -- Statusline
     statusline = table.concat({
@@ -201,7 +203,8 @@ map('v', '>', '>gv', { noremap = true, silent = true })
 -- move line up/down in visual mode
 map('v', '<M-j>', ":m '>+1<CR>gv=gv", { noremap = true, silent = true })
 map('v', '<M-k>', ":m '<-2<CR>gv=gv", { noremap = true, silent = true })
-
+-- hover help
+map('n', 'K', '<cmd>lua vim.lsp.buf.hover()<CR>', { noremap = true, silent = true })
 
 
 -- open terminal in split window below
