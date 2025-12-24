@@ -5,6 +5,5 @@ return {
         'pyproject.toml',
         'uv.lock',
         '__init__.py',
-        '.git',
     },
 }
