@@ -331,6 +331,7 @@ map('n', 'gdf', vim.lsp.buf.definition)
 vim.lsp.config("ruff", {
     init_options = {
         settings = {
+            loglevel = "debug",
             -- ruff settings
             lint = {
                 extendSelect = { "All" },
@@ -344,13 +345,6 @@ vim.lsp.config("ruff", {
                     "S101",
                 },
             },
-        },
-    },
-})
-require("lspconfig").ruff.setup({
-    init_options = {
-        settings = {
-            logLevel = "debug",
         },
     },
 })
