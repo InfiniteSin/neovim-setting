@@ -1,8 +1,11 @@
 -- Initial Configs
-require('configs.basic')
+require('basic')
 
 -- Keymaps Configs
-require('configs.keymaps')
+require('keymaps')
 
 -- Plugins Configs
-require('configs.plugin')
+require('plugin')
+
+-- Auto Commands
+require('autocmd')

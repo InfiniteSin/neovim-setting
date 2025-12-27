@@ -23,7 +23,7 @@
     "nvim-treesitter": {
       "rev": "cabbd52bb8d461ca1e6858c0476933256917de62",
       "src": "https://github.com/nvim-treesitter/nvim-treesitter",
-      "version": "'main'"
+      "version": "'master'"
     },
     "oil.nvim": {
       "rev": "bbad9a76b2617ce1221d49619e4e4b659b3c61fc",
