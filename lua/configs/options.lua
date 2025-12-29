@@ -66,7 +66,7 @@ local options_opt = {
         "noinsert", -- do not auto insert complete option
         "popup",
     },
-    completefunc = 'v:lua.vim.lsp.omnifunc',
+    -- completefunc = 'v:lua.vim.lsp.omnifunc',
     -- wildmenu = true,
     pumheight = 10, -- show at most 10 options
     -- UI
