@@ -12,3 +12,16 @@ vim.api.nvim_create_autocmd('FileType', {
     end,
 })
 
+vim.api.nvim_create_user_command('TSListIn', function()
+    require('nvim-treesitter.config').get_installed()
+end, {
+    bang = true,
+    desc = 'List installed treesitter parsers',
+})
+
+vim.api.nvim_create_user_command('TSListAvaliable', function()
+    require('nvim-treesitter.config').get_available()
+end, {
+    bang = true,
+    desc = 'List avaliable treesitter parsers',
+})
