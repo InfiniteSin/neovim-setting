@@ -1,3 +1,5 @@
+-- Kickstart
+require("configs.kickstart")
 -- Editor Options
 require("configs.options")
 -- Plugin Manage

@@ -1,4 +1,5 @@
 -- Plugins Configs
+
 -- Bootstrap lazy.nvim
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 if not (vim.uv or vim.loop).fs_stat(lazypath) then
@@ -29,4 +30,9 @@ require("lazy").setup({
   -- checker = { enabled = true },
 })
 
+--[[
+vim.pack.add({
+    "https://github.com/nvim-treesitter/nvim-treesitter",
+})
+--]]
 -- require('plugins')

@@ -88,26 +88,3 @@ for key, value in pairs(options_o) do
     o[key] = value
 end
 
--- Buffer Scope Options
-local bo = vim.bo
-local options_bo = {
-    -- Indent
-    tabstop = 4,
-    expandtab = true,  -- use spaces instead of tab
-    autoindent = true, -- auto indent next line
-
-    -- File
-    autoread = true, -- auto load file when was change outside
-}
-for key, value in pairs(options_bo) do
-    bo[key] = value
-end
-
--- Window Scope Options
-local wo = vim.wo
-local options_wo = {
-}
-for key, value in pairs(options_wo) do
-    wo[key] = value
-end
-
