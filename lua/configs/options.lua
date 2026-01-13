@@ -50,11 +50,11 @@ local opts_tbl = {
   clipboard = vim.env.SSH_TTY and "" or "unnamedplus",
   -- Complete Option Menu
   completeopt = {
-      "menu",
-      "menuone",
-      "noselect", -- donot auto select complete option
-      "noinsert", -- do not auto insert complete option
-      "popup",
+    "menu",
+    "menuone",
+    "noselect", -- donot auto select complete option
+    "noinsert", -- do not auto insert complete option
+    "popup",
   },
   -- completefunc = 'v:lua.vim.lsp.omnifunc',
   -- wildmenu = true,
