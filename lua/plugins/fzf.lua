@@ -50,6 +50,11 @@ local M = {
         cmd = vim.fn.stdpath('config')
       })
     end, { desc = '[E]nvironment Config' })
+    map('n', '<leader>ep', function()
+      builtin.find_files({
+        cmd = vim.fs.joinpath(vim.fn.stdpath('data'), 'lazy')
+      })
+    end, { desc = '[E]nvironment Plugins' })
 
   end,
 }
