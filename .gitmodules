@@ -1,0 +1,3 @@
+[submodule "lua/luv"]
+	path = lua/luv
+	url = https://github.com/LuaCATS/luv
