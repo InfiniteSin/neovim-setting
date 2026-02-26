@@ -136,6 +136,8 @@ vim.diagnostic.config({
 -- User Define Functions
 ----------------------------------------------------------------------------
 
+local user_config_group = vim.api.nvim_create_augroup("UserConfig", { clear = true })
+
 local function pack_clean()
     local active_plugins = {}
     local unused_plugins = {}
@@ -176,7 +178,10 @@ end
 
 vim.api.nvim_create_user_command('PluginClear', function(opts)
     plugin_clear()
-    vim.cmd('restart')
+    local choice = vim.fn.confirm('Restart?: ', '&Yes\n&No', 2)
+    if choice == 1 then
+        vim.cmd('restart')
+    end
 end, { 
 desc = 'Clean all files of plugin installed by vim.pack',
 force = false,
@@ -327,11 +332,86 @@ end
 
 setup_dynamic_statusline()
 
+local function lsp_on_attach(ev)
+    local client = vim.lsp.get_client_by_id(ev.data.client_id)
+    if not client then
+        return
+    end
+
+    local bufnr = ev.buf
+    local opts = { noremap = true, silent = true, buffer = bufnr }
+
+    -- vim.keymap.set("n", "<leader>gd", function()
+    --     require("fzf-lua").lsp_definitions({ jump_to_single_result = true })
+    -- end, opts)
+    --
+    -- vim.keymap.set("n", "<leader>gD", vim.lsp.buf.definition, opts)
+    --
+    -- vim.keymap.set("n", "<leader>gS", function()
+    --     vim.cmd("vsplit")
+    --     vim.lsp.buf.definition()
+    -- end, opts)
+    --
+    -- vim.keymap.set("n", "<leader>ca", vim.lsp.buf.code_action, opts)
+    -- vim.keymap.set("n", "<leader>rn", vim.lsp.buf.rename, opts)
+    --
+    -- vim.keymap.set("n", "<leader>D", function()
+    --     vim.diagnostic.open_float({ scope = "line" })
+    -- end, opts)
+    -- vim.keymap.set("n", "<leader>d", function()
+    --     vim.diagnostic.open_float({ scope = "cursor" })
+    -- end, opts)
+    -- vim.keymap.set("n", "<leader>nd", function()
+    --     vim.diagnostic.jump({ count = 1 })
+    -- end, opts)
+    --
+    -- vim.keymap.set("n", "<leader>pd", function()
+    --     vim.diagnostic.jump({ count = -1 })
+    -- end, opts)
+    --
+    -- vim.keymap.set("n", "K", vim.lsp.buf.hover, opts)
+    --
+    -- vim.keymap.set("n", "<leader>fd", function()
+    --     require("fzf-lua").lsp_definitions({ jump_to_single_result = true })
+    -- end, opts)
+    -- vim.keymap.set("n", "<leader>fr", function()
+    --     require("fzf-lua").lsp_references()
+    -- end, opts)
+    -- vim.keymap.set("n", "<leader>ft", function()
+    --     require("fzf-lua").lsp_typedefs()
+    -- end, opts)
+    -- vim.keymap.set("n", "<leader>fs", function()
+    --     require("fzf-lua").lsp_document_symbols()
+    -- end, opts)
+    -- vim.keymap.set("n", "<leader>fw", function()
+    --     require("fzf-lua").lsp_workspace_symbols()
+    -- end, opts)
+    -- vim.keymap.set("n", "<leader>fi", function()
+    --     require("fzf-lua").lsp_implementations()
+    -- end, opts)
+
+    if client:supports_method("textDocument/codeAction", bufnr) then
+        -- vim.keymap.set("n", "<leader>oi", function()
+        --     vim.lsp.buf.code_action({
+        --         context = { only = { "source.organizeImports" }, diagnostics = {} },
+        --         apply = true,
+        --         bufnr = bufnr,
+        --     })
+        --     vim.defer_fn(function()
+        --         vim.lsp.buf.format({ bufnr = bufnr })
+        --     end, 50)
+        -- end, opts)
+    end
+end
+
+vim.api.nvim_create_autocmd("LspAttach", { group = user_config_group, callback = lsp_on_attach })
+
+
 ----------------------------------------------------------------------------
 -- Plugins
 ----------------------------------------------------------------------------
 
-vim.pack.add({
+local plugin_list = {
     -- git
     "https://www.github.com/lewis6991/gitsigns.nvim",
     -- collections of qol plugins
@@ -355,8 +435,9 @@ vim.pack.add({
         version = vim.version.range("1.*"),
     },
     "https://github.com/L3MON4D3/LuaSnip",
+}
 
-})
+vim.pack.add(plugin_list, { confirm = false })
 
 
 local function packadd(name)
@@ -371,16 +452,16 @@ require("mini.notify")
 
 -- Git
 require("gitsigns").setup({
-	signs = {
-		add = { text = "\u{2590}" }, -- ▏
-		change = { text = "\u{2590}" }, -- ▐
-		delete = { text = "\u{2590}" }, -- ◦
-		topdelete = { text = "\u{25e6}" }, -- ◦
-		changedelete = { text = "\u{25cf}" }, -- ●
-		untracked = { text = "\u{25cb}" }, -- ○
-	},
-	signcolumn = true,
-	current_line_blame = false,
+    signs = {
+        add = { text = "\u{2590}" }, -- ▏
+        change = { text = "\u{2590}" }, -- ▐
+        delete = { text = "\u{2590}" }, -- ◦
+        topdelete = { text = "\u{25e6}" }, -- ◦
+        changedelete = { text = "\u{25cf}" }, -- ●
+        untracked = { text = "\u{25cb}" }, -- ○
+    },
+    signcolumn = true,
+    current_line_blame = false,
 })
 
 
@@ -586,9 +667,8 @@ vim.keymap.set("n", "J", "mzJ`z", { desc = "Join lines and keep cursor position"
 -- AutoCMDS
 ----------------------------------------------------------------------------
 
-local user_config_group = vim.api.nvim_create_augroup("UserConfig", { clear = true })
 
--- Format on save (ONLY real file buffers, ONLY when efm is attached)
+-- Format on save (ONLY real file buffers)
 vim.api.nvim_create_autocmd("BufWritePre", {
     group = user_config_group,
     pattern = {
