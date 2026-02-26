@@ -26,6 +26,7 @@ local options_opt = {
     colorcolumn = "80",     -- column length reference
     -- cmdheight = 2,               -- higher command area
     wrap = false,           -- disable auto line wrap
+    whichwrap = "<,>,[,]",
     linebreak = true,       -- wrap line in convenient points only in display
     -- hidden = true,       -- hidden modified buffers
     list = true,            -- show invisible characters
@@ -89,6 +90,7 @@ local options_opt = {
     fillchars = {
         eob = " ",          -- hide "~" on empty lines
     },
+    tabline = "%t",
     -- LSP
     synmaxcol = 300,        -- syntax highlighting limit
     -- Buffers
@@ -106,9 +108,6 @@ vim.opt.iskeyword:append("-")
 vim.opt.clipboard:append("unnamedplus")
 -- improve diff display
 vim.opt.diffopt:append("linematch:60")
-
-vim.o.whichwrap = "<,>,[,]"
-vim.o.tabline = "%t"
 
 vim.diagnostic.config({
     underline = false,
@@ -327,8 +326,7 @@ vim.pack.add({
     -- collections of qol plugins
     "https://www.github.com/echasnovski/mini.nvim",
     -- fuzzy find
-    "https://github.com/nvim-lua/plenary.nvim",
-    "https://github.com/nvim-telescope/telescope.nvim",
+    "https://github.com/ibhagwan/fzf-lua",
     -- AST enhanced
     {
         src = "https://github.com/nvim-treesitter/nvim-treesitter",
@@ -354,49 +352,19 @@ local function packadd(name)
     vim.cmd("packadd " .. name)
 end
 
-vim.pack.add({
-    {
-        src = 'https://github.com/nvim-telescope/telescope-fzf-native.nvim',
-        name = 'telescope-fzf-native.nvim',
-    }
-},{
-    load = function(plug_data)
-        local spec = plug_data.spec
-        local path = plug_data.path
-
-        packadd(spec.name)
-
-        local build_dir = path .. '/build'
-        local lib_file = build_dir .. '/libfzf.so'
-
-        if vim.fn.filereadable(libfile) == 0 then
-
-            vim.notify('Building' .. plug_data.spec.name, vim.log.levels.INFO)
-
-            local compile_string = string.format(
-                'cd "%s" && cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release && cmake --build build --config Release --target install',
-                path
-            )
-
-            local result = vim.fn.system(compile_string)
-
-            if vim.v.shell_error == 0 then
-                vim.notify('Build Successfully', vim.log.levels.INFO)
-            else
-                vim.notify('Build Failed: ' .. result, vim.log.levels.ERROR)
-            end
-        end
-
-        if package.loaded['telescope'] then
-            require('telescope').load_extension('fzf')
-        end
-
-    end
-})
-
-
 -- Git
-packadd("gitsigns.nvim")
+require("gitsigns").setup({
+	signs = {
+		add = { text = "\u{2590}" }, -- ▏
+		change = { text = "\u{2590}" }, -- ▐
+		delete = { text = "\u{2590}" }, -- ◦
+		topdelete = { text = "\u{25e6}" }, -- ◦
+		changedelete = { text = "\u{25cf}" }, -- ●
+		untracked = { text = "\u{25cb}" }, -- ○
+	},
+	signcolumn = true,
+	current_line_blame = false,
+})
 
 
 -- Oil
@@ -513,40 +481,35 @@ vim.opt.foldmethod = "expr"
 vim.opt.foldexpr = "v:lua.vim.treesitter.foldexpr()"
 
 -- Fuzzy Finder
-require('telescope')
 
-local fzf_group = vim.api.nvim_create_augroup('TelescopeConfig', { clear = true })
-vim.api.nvim_create_autocmd('VimEnter', {
-    group = fzf_group,
-    once = true,
-    callback = function()
-        -- Telescope Configs
-        require('telescope').setup({})
+require('fzf-lua').setup({})
 
-        -- Telescope Keymaps
-        local builtin = require('telescope.builtin')
-        local set = vim.keymap.set
-        set('n', '<leader>ff', builtin.find_files, { desc = "Find Files" })
-        set('n', '<leader>fg', builtin.live_grep, { desc = "Find Live Grep" })
-        set('n', '<leader>fb', builtin.buffers, { desc = "Find Buffers" })
-        set('n', '<leader>fq', builtin.quickfix, { desc = "Find QuickFix" })
-        set('n', '<leader>fl', builtin.loclist, { desc = "Find Locationlist" })
-        set('n', '<leader>fh', builtin.help_tags, { desc = "Find Helps" })
-        set('n', '<leader>f?', builtin.keymaps, { desc = "Find Keymaps" })
-    end,
-})
+-- Fuzzy Finder Keymaps
 
-
+vim.keymap.set("n", "<leader>ff", function() require("fzf-lua").files() end, { desc = "Find Files" })
+vim.keymap.set("n", "<leader>fg", function() require("fzf-lua").live_grep() end, { desc = "Find Live Grep" })
+vim.keymap.set("n", "<leader>fb", function() require("fzf-lua").buffers() end, { desc = "Find Buffers" })
+vim.keymap.set("n", "<leader>fq", function() require("fzf-lua").quickfix() end, { desc = "Find QuickFix" })
+vim.keymap.set("n", "<leader>fl", function() require("fzf-lua").loclist() end, { desc = "Find Locationlist" })
+vim.keymap.set("n", "<leader>fh", function() require("fzf-lua").help_tags() end, { desc = "Find Helps" })
+vim.keymap.set("n", "<leader>f=", function() require("fzf-lua").keymaps() end, { desc = "Find Keymaps" })
+vim.keymap.set("n", "<leader>fx", function() require("fzf-lua").diagnostics_document() end, { desc = "Find Diagnostic Document" })
+vim.keymap.set("n", "<leader>fX", function() require("fzf-lua").diagnostics_workspace() end, { desc = "Find Diagnostic Workspace" })
 
 -- LSP
 packadd("nvim-lspconfig")
-packadd("mason.nvim")
+require("mason").setup({})
 
 
 -- Autocomplete
 packadd("blink.cmp")
 packadd("LuaSnip")
 
+
+-- Utils
+require("mini.icons")
+require("mini.surround")
+require("mini.comment")
 
 
 ----------------------------------------------------------------------------
