@@ -2,15 +2,18 @@ return {
     "nvim-treesitter/nvim-treesitter",
     lazy = false,
     build = ":TSUpdate",
-    opts = {
-        highlight = { enable = true },
-        -- indent = { enable = true },
-        fold = {
-            enable = true,
-            foldopen = 'foldopen',
-        },
-    },
+    opts = {},
     init = function()
+        local treesitter = require('nvim-treesitter')
+        treesitter.setup({
+            highlight = { enable = true },
+            -- indent = { enable = true },
+            fold = {
+                enable = true,
+                foldopen = 'foldopen',
+            },
+
+        })
         local ensure_installed = {
             "vim",
             "vimdoc",
