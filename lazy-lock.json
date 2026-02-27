@@ -1,0 +1,9 @@
+{
+  "fzf-lua": { "branch": "main", "commit": "d637241b34f2cb012309baebb2e35e440a946d8b" },
+  "gitsigns.nvim": { "branch": "main", "commit": "9f3c6dd7868bcc116e9c1c1929ce063b978fa519" },
+  "lazy.nvim": { "branch": "main", "commit": "85c7ff3711b730b4030d03144f6db6375044ae82" },
+  "luarocks.nvim": { "branch": "main", "commit": "1db9093915eb16ba2473cfb8d343ace5ee04130a" },
+  "mini.nvim": { "branch": "main", "commit": "a95dc67ecff78de138543a20c20f29f47111b122" },
+  "nvim-treesitter": { "branch": "main", "commit": "ae2081cfcd3719d74b600f8377e4a99d1ec19c4a" },
+  "oil.nvim": { "branch": "master", "commit": "0fcc83805ad11cf714a949c98c605ed717e0b83e" }
+}
