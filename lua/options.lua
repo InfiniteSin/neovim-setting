@@ -15,57 +15,57 @@ local options_opt = {
     -- Editor
     scrolloff = 8,
     sidescrolloff = 8,
-    showtabline = 2,     -- always show tabline
-    showmode = false,    -- not show current vim mode
-    number = true,       -- use line number
+    showtabline = 2,       -- always show tabline
+    showmode = false,      -- not show current vim mode
+    number = true,         -- use line number
     relativenumber = true, -- use relative line number
-    cursorline = true,   -- highlight current line
-    signcolumn = "yes:3", -- left 1 column to show any sign
-    colorcolumn = "80",  -- column length reference
+    cursorline = true,     -- highlight current line
+    signcolumn = "yes:3",  -- left 1 column to show any sign
+    colorcolumn = "80",    -- column length reference
     -- cmdheight = 2,               -- higher command area
-    wrap = false,        -- disable auto line wrap
+    wrap = false,          -- disable auto line wrap
     whichwrap = "<,>,[,]",
-    linebreak = true,    -- wrap line in convenient points only in display
+    linebreak = true,      -- wrap line in convenient points only in display
     -- hidden = true,       -- hidden modified buffers
-    list = true,         -- show invisible characters
-    showmatch = true,    -- highlight match brackets
-    mouse = "a",         -- enable mouse support
-    splitbelow = true,   -- open new vertical split tab below
-    splitright = true,   -- open new horizontal split tab right
-    updatetime = 300,    -- status update time
-    timeoutlen = 500,    -- keyboard react time 500 ms
-    lazyredraw = true,   -- do not redraw during macros
-    errorbells = false,  -- no error sounds
+    list = true,           -- show invisible characters
+    showmatch = true,      -- highlight match brackets
+    mouse = "a",           -- enable mouse support
+    splitbelow = true,     -- open new vertical split tab below
+    splitright = true,     -- open new horizontal split tab right
+    updatetime = 300,      -- status update time
+    timeoutlen = 500,      -- keyboard react time 500 ms
+    lazyredraw = true,     -- do not redraw during macros
+    errorbells = false,    -- no error sounds
     -- better backspace behaviour
     backspace = "indent,eol,start",
     selection = "inclusive", -- include last char in selection
-    redrawtime = 10000,    -- increase neovim redraw tolerance
-    maxmempattern = 20000, -- increase max memory
+    redrawtime = 10000,      -- increase neovim redraw tolerance
+    maxmempattern = 20000,   -- increase max memory
     -- Markup
-    conceallevel = 0,      -- do not hide markup
-    concealcursor = "",    -- do not hide cursorline in markup
+    conceallevel = 0,        -- do not hide markup
+    concealcursor = "",      -- do not hide cursorline in markup
     -- Indent
-    tabstop = 4,           -- 1 Tab == 4 Spaces
+    tabstop = 4,             -- 1 Tab == 4 Spaces
     softtabstop = 4,
-    shiftround = true,     -- round indent
-    shiftwidth = 4,        -- moving space when using >> and <<
-    expandtab = true,      -- use spaces instead of tab
-    autoindent = true,     -- auto indent next line
+    shiftround = true,       -- round indent
+    shiftwidth = 4,          -- moving space when using >> and <<
+    expandtab = true,        -- use spaces instead of tab
+    autoindent = true,       -- auto indent next line
     smartindent = true,
     -- Search
-    hlsearch = true, -- highlight search result
+    hlsearch = true,   -- highlight search result
     ignorecase = true, -- ignore case sensetive
-    smartcase = true, -- case sensetive only with capital word
-    incsearch = true, -- search with characters input
+    smartcase = true,  -- case sensetive only with capital word
+    incsearch = true,  -- search with characters input
     -- File
-    autoread = true, -- auto load file when was change outside
+    autoread = true,   -- auto load file when was change outside
     autowrite = false, -- diable auto-save
     undofile = true,
     autochdir = false, -- do not autochange dirs
     -- Backup
-    backup = false,  -- disable backup
+    backup = false,    -- disable backup
     writebackup = false,
-    swapfile = false, -- disable swapfile
+    swapfile = false,  -- disable swapfile
     -- Complete Option Menu
     completeopt = {
         "menu",
@@ -89,9 +89,9 @@ local options_opt = {
     },
     tabline = "%t",
     -- LSP
-    synmaxcol = 300, -- syntax highlighting limit
+    synmaxcol = 300,   -- syntax highlighting limit
     -- Buffers
-    hidden = true,   -- allow hidden buffers
+    hidden = true,     -- allow hidden buffers
     modifiable = true, -- allow buffer modifications
 }
 
