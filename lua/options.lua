@@ -41,16 +41,19 @@ local options_opt = {
     selection = "inclusive", -- include last char in selection
     redrawtime = 10000,      -- increase neovim redraw tolerance
     maxmempattern = 20000,   -- increase max memory
+    foldenable = true,
+    foldlevel = 99,
+    foldlevelstart = 99,
     -- Markup
-    conceallevel = 0,        -- do not hide markup
-    concealcursor = "",      -- do not hide cursorline in markup
+    conceallevel = 0,   -- do not hide markup
+    concealcursor = "", -- do not hide cursorline in markup
     -- Indent
-    tabstop = 4,             -- 1 Tab == 4 Spaces
+    tabstop = 4,        -- 1 Tab == 4 Spaces
     softtabstop = 4,
-    shiftround = true,       -- round indent
-    shiftwidth = 4,          -- moving space when using >> and <<
-    expandtab = true,        -- use spaces instead of tab
-    autoindent = true,       -- auto indent next line
+    shiftround = true,  -- round indent
+    shiftwidth = 4,     -- moving space when using >> and <<
+    expandtab = true,   -- use spaces instead of tab
+    autoindent = true,  -- auto indent next line
     smartindent = true,
     -- Search
     hlsearch = true,   -- highlight search result
