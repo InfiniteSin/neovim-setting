@@ -1,5 +1,6 @@
 return {
     "stevearc/oil.nvim",
+    cmd = { "Oil" },
     keys = {
         { "-", "<cmd>Oil<cr>", mode = 'n', desc = 'Toggle Oil', remap = true },
     },

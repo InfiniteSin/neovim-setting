@@ -32,8 +32,6 @@ return {
             "vue",
             "svelte",
             "bash",
-            "lua",
-            "python",
         }
 
         local config = require("nvim-treesitter.config")
@@ -50,9 +48,6 @@ return {
         if #parsers_to_install > 0 then
             treesitter.install(parsers_to_install)
         end
-
-        vim.opt.foldmethod = "manual"
-        vim.opt.foldexpr = "v:lua.vim.treesitter.foldexpr()"
 
     end,
 }

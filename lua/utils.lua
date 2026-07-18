@@ -51,15 +51,38 @@ force = false,
 
 
 -- User Defined Dynamic Statusline
--- Git branch function with caching and Nerd Font icon
+-- Git branch function with async caching and Nerd Font icon
+-- The statusline only reads the cache; it never spawns a process
 local cached_branch = ""
-local last_check = 0
-local function git_branch()
-    local now = vim.loop.now()
-    if now - last_check > 5000 then -- Check every 5 seconds
-        cached_branch = vim.fn.system("git branch --show-current 2>/dev/null | tr -d '\n'")
-        last_check = now
+local function refresh_git_branch()
+    -- gitsigns already tracks the branch asynchronously; prefer it
+    local head = vim.b.gitsigns_head
+    if head and head ~= "" then
+        cached_branch = head
+        return
     end
+    vim.system({ "git", "branch", "--show-current" }, { text = true }, vim.schedule_wrap(function(out)
+        if out.code == 0 then
+            cached_branch = vim.trim(out.stdout or "")
+        else
+            cached_branch = ""
+        end
+    end))
+end
+
+vim.api.nvim_create_autocmd({ "BufEnter", "DirChanged" }, {
+    group = user_config_group,
+    callback = refresh_git_branch,
+})
+
+-- gitsigns updates its head info after attaching to a buffer
+vim.api.nvim_create_autocmd("User", {
+    group = user_config_group,
+    pattern = "GitSignsUpdate",
+    callback = refresh_git_branch,
+})
+
+local function git_branch()
     if cached_branch ~= "" then
         return " \u{e725} " .. cached_branch .. " " -- nf-dev-git_branch
     end
@@ -116,11 +139,13 @@ local function file_type()
     return ((icons[ft] or " \u{f15b} ") .. ft)
 end
 
--- File size with Nerd Font icon
-local function file_size()
-    local size = vim.fn.getfsize(vim.fn.expand("%"))
+-- File size with Nerd Font icon (cached per buffer)
+local file_size_cache = {}
+local function refresh_file_size(ev)
+    local size = vim.fn.getfsize(vim.api.nvim_buf_get_name(ev.buf))
     if size < 0 then
-        return ""
+        file_size_cache[ev.buf] = ""
+        return
     end
     local size_str
     if size < 1024 then
@@ -130,7 +155,23 @@ local function file_size()
     else
         size_str = string.format("%.1fM", size / 1024 / 1024)
     end
-    return " \u{f016} " .. size_str .. " " -- nf-fa-file_o
+    file_size_cache[ev.buf] = " \u{f016} " .. size_str .. " " -- nf-fa-file_o
+end
+
+vim.api.nvim_create_autocmd({ "BufEnter", "BufWritePost" }, {
+    group = user_config_group,
+    callback = refresh_file_size,
+})
+
+vim.api.nvim_create_autocmd("BufDelete", {
+    group = user_config_group,
+    callback = function(ev)
+        file_size_cache[ev.buf] = nil
+    end,
+})
+
+local function file_size()
+    return file_size_cache[vim.api.nvim_get_current_buf()] or ""
 end
 
 -- Mode indicators with Nerd Font icons
