@@ -56,6 +56,15 @@ vim.lsp.config('lua_ls', {
     },
 })
 
+-- detect .mdx as markdown.mdx: markdown tooling applies to MDX too
+-- (marksman lists the ft; core treesitter maps it to the markdown parser)
+vim.filetype.add({ extension = { mdx = "markdown.mdx" } })
+
+-- vendored lsp/mdx_analyzer.lua targets filetype 'mdx'; retarget to markdown.mdx
+vim.lsp.config('mdx_analyzer', {
+    filetypes = { 'markdown.mdx' },
+})
+
 vim.lsp.enable({
     -- AST
     'ast_grep',
@@ -67,6 +76,9 @@ vim.lsp.enable({
     'ruff',
     'ty',
     'debugpy',
+    -- Markdown/MDX
+    'marksman',
+    'mdx_analyzer',
 })
 
 
