@@ -83,6 +83,9 @@ vim.lsp.enable({
 
 
 
+-- LuaJIT exposes unpack as a global (Lua 5.1); 5.2+ moved it to table.unpack
+local unpack = table.unpack or unpack
+
 -- fzf-lua stays off the rtp until loaded; packadd is a no-op once loaded
 local function fzf(fn, ...)
     local args = { ... }
