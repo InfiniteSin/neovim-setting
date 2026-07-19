@@ -1,7 +1,23 @@
 -- LSP Configs
--- vim.pack.add({
---     { src = 'https://github.com/neovim/nvim-lspconfig' },
--- })
+
+-- load=false: on the rtp so vendored lsp/*.lua can require 'lspconfig.util';
+-- its tiny plugin/ file (defines :LspInfo etc.) is sourced at startup.
+vim.pack.add({
+    { src = "https://github.com/neovim/nvim-lspconfig" },
+}, { load = false })
+
+-- fully deferred: load=false would still source plugin/ at end of startup
+-- (:packadd! semantics); a noop load function keeps mason off the rtp entirely.
+vim.pack.add({
+    { src = "https://github.com/mason-org/mason.nvim" },
+}, { load = function() end })
+
+-- approximates lazy.nvim's cmd = "Mason": load on first :Mason
+vim.api.nvim_create_user_command("Mason", function()
+    vim.cmd.packadd("mason.nvim") -- add to rtp + source plugin/ (defines the real :Mason)
+    require("mason").setup({})
+    vim.cmd("Mason")
+end, { desc = "Load mason.nvim and open :Mason" })
 
 local lua_root_markers1 = {
     '.emmyrc.json',
@@ -55,6 +71,15 @@ vim.lsp.enable({
 
 
 
+-- fzf-lua stays off the rtp until loaded; packadd is a no-op once loaded
+local function fzf(fn, ...)
+    local args = { ... }
+    return function()
+        vim.cmd.packadd("fzf-lua")
+        require("fzf-lua")[fn](unpack(args))
+    end
+end
+
 local function lsp_on_attach(ev)
     local client = vim.lsp.get_client_by_id(ev.data.client_id)
     if not client then
@@ -64,9 +89,7 @@ local function lsp_on_attach(ev)
     local bufnr = ev.buf
     local opts = { noremap = true, silent = true, buffer = bufnr }
 
-    vim.keymap.set("n", "<leader>gd", function()
-        require("fzf-lua").lsp_definitions({ jump_to_single_result = true })
-    end, opts)
+    vim.keymap.set("n", "<leader>gd", fzf("lsp_definitions", { jump_to_single_result = true }), opts)
 
     vim.keymap.set("n", "<leader>gD", vim.lsp.buf.definition, opts)
 
@@ -75,21 +98,11 @@ local function lsp_on_attach(ev)
         vim.lsp.buf.definition()
     end, opts)
 
-    vim.keymap.set("n", "grr", function()
-        require("fzf-lua").lsp_references()
-    end, opts)
-    vim.keymap.set("n", "<leader>ft", function()
-        require("fzf-lua").lsp_typedefs()
-    end, opts)
-    vim.keymap.set("n", "<leader>fs", function()
-        require("fzf-lua").lsp_document_symbols()
-    end, opts)
-    vim.keymap.set("n", "<leader>fw", function()
-        require("fzf-lua").lsp_workspace_symbols()
-    end, opts)
-    vim.keymap.set("n", "<leader>fi", function()
-        require("fzf-lua").lsp_implementations()
-    end, opts)
+    vim.keymap.set("n", "grr", fzf("lsp_references"), opts)
+    vim.keymap.set("n", "<leader>ft", fzf("lsp_typedefs"), opts)
+    vim.keymap.set("n", "<leader>fs", fzf("lsp_document_symbols"), opts)
+    vim.keymap.set("n", "<leader>fw", fzf("lsp_workspace_symbols"), opts)
+    vim.keymap.set("n", "<leader>fi", fzf("lsp_implementations"), opts)
     vim.keymap.set("n", "<leader>lf", vim.lsp.buf.format, opts)
 
     if client:supports_method("textDocument/codeAction", bufnr) then
@@ -110,15 +123,3 @@ vim.api.nvim_create_autocmd("LspAttach", {
     group = vim.api.nvim_create_augroup("MyLSPConfig", { clear = true }),
     callback = lsp_on_attach
 })
-
-
-return {
-    {
-        'mason-org/mason.nvim',
-        cmd = 'Mason',
-        dependencies = {
-            'neovim/nvim-lspconfig'
-        },
-        opts = {},
-    },
-}
